@@ -1,0 +1,222 @@
+basePath: /
+definitions:
+  address.Address:
+    properties:
+      city:
+        type: string
+      country:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      state:
+        type: string
+      street:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  users.AddUser:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - username
+    type: object
+  users.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  users.UpdateUser:
+    properties:
+      email:
+        type: string
+      username:
+        maxLength: 50
+        minLength: 3
+        type: string
+    required:
+    - email
+    - username
+    type: object
+  users.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample API documentation
+  title: My API
+  version: "1.0"
+paths:
+  /address:
+    post:
+      consumes:
+      - application/json
+      description: Add a new address to the database
+      parameters:
+      - description: New address details
+        in: body
+        name: address
+        required: true
+        schema:
+          $ref: '#/definitions/address.Address'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Address added successfully
+          schema:
+            $ref: '#/definitions/address.Address'
+      summary: Add a new address
+      tags:
+      - address
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all users from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/users.User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.ErrorResponse'
+      summary: Get all users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Add a new user to the database
+      parameters:
+      - description: New user details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/users.AddUser'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User added successfully
+          schema:
+            $ref: '#/definitions/users.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/users.ErrorResponse'
+      summary: Add a new user
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      description: Delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/users.ErrorResponse'
+      summary: Delete a user
+      tags:
+      - users
+    get:
+      consumes:
+      - application/json
+      description: Get a single user by its ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/users.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.ErrorResponse'
+      summary: Get user by ID
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update user details
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated user details
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/users.UpdateUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/users.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/users.ErrorResponse'
+      summary: Update a user
+      tags:
+      - users
+swagger: "2.0"
